@@ -10,8 +10,10 @@ def display_data(df, custom_name):
     st.write(f"### Data for `{custom_name}`")
     st.dataframe(df)
 
-def plot_data(list_of_filenames_and_custom_names:list):
-    print("hello")
+def plot_data(list_of_files_and_custom_names:list):
+    first_file, first_name = list_of_files_and_custom_names[0]
+    st.write(load_data(first_file).head())
+    st.write(first_name)
     
 
 def main():
@@ -43,6 +45,7 @@ def main():
         # step 4: plot the contents of the files:
         if st.button("Plot heatmap"):
             st.write("graphs plotted!")
+            plot_data(files_with_names)
 
 
     else:
