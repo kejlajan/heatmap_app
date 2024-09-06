@@ -1,0 +1,9 @@
+# this is a list of things that should be done:
+
+[x] test things out
+    -- plot_data() not working
+    -- load_data() not working
+
+[o] get plot_data() working
+[ ] copy from the .ipynb file that already has a working pipeline
+ 
