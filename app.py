@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+
 
 def load_data(file):
     """Load data from a TSV file (uploaded through Streamlit)."""
@@ -20,7 +19,7 @@ def plot_data(list_of_files_and_custom_names):
     
 def main():
     st.title("TSV Files Viewer")
-    
+
     # Step 1: File selection
     uploaded_files = st.file_uploader(
         "Choose TSV files", 
@@ -40,7 +39,10 @@ def main():
             # Append the file and its custom name to the list
             files_with_names.append((uploaded_file, custom_name))
 
-        st.write(files_with_names)
+        # debug:
+        with st.sidebar:
+            st.write("## Debug bar:")
+            st.write(files_with_names)
 
         # Step 3: Display the contents of each file as a dataframe with the custom name
         for uploaded_file, custom_name in files_with_names:
