@@ -17,6 +17,15 @@ def apply_custom_colnames(list_of_DFs_and_custom_names):
     """Changes the abundance column name to the custom colname for each DF in place."""
     for df, colname in list_of_DFs_and_custom_names:
         df.rename(columns={"abundance":colname}, inplace=True)
+    
+def get_hierarchy_colname(DF) -> str:
+    """Returns the colname of the column that contains hierarchy levels"""    
+    for colname in DF.columns:
+        for level in colname.split(";"):
+            for keyword in ["kingdom", "phylum", "class", "family", "genus", "species"]:
+                if keyword.lower() in level.lower():
+                    return colname
+    return None
 
 def plot_data(list_of_DFs_and_custom_names):
     """Plot heatmaps for each passed DF."""
@@ -45,9 +54,8 @@ def plot_data(list_of_DFs_and_custom_names):
     # sort values by the first sample:
     merged_df.sort_values(by=first_name, ascending = False, inplace=True)
 
-    # crop for the top 25
+    # show the top 25
     final_df = merged_df[names][:25]
-
     st.dataframe(final_df)
 
     plt.figure(figsize=(6,15))
@@ -58,13 +66,12 @@ def main():
 
     st.title("TSV Files Viewer")
 
-
     # Step 1: File selection
     uploaded_files = st.file_uploader(
         "Choose TSV files", 
         type="tsv", 
         accept_multiple_files=True)
-
+    
     if uploaded_files:
         # Step 2: Create a list to store df and custom name associations
         DFs_with_names = []
@@ -82,6 +89,11 @@ def main():
         with st.sidebar:
             st.write("## Debug bar:")
             st.write("debugging:")
+            st.write(uploaded_files)
+
+        # group by selected level:
+        with st.sidebar:
+            st.multiselect(label="Level", options=["laska", "smrt", "pravda", "lez"], placeholder="Choose the level of aggregation")
 
         # Step 3: Display the contents of each file as a dataframe with the custom name
         for df, custom_name in DFs_with_names:
