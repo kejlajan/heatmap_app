@@ -93,9 +93,9 @@ def main():
             # Append the file's dataframe and its custom name to the list
             DFs_with_names.append((load_file_into_DF(uploaded_file), custom_name))
 
-        # group by selected level:
+        # select a hierarchy level:
         with st.sidebar:
-           hierarchy_selection = st.multiselect(label="Level", options=get_hierarchy_colname(DFs_with_names[0][0]).split(';'), placeholder="Choose the level of aggregation")
+           hierarchy_selection = st.multiselect("Level", get_hierarchy_colname(DFs_with_names[0][0]).split(';'), " species", placeholder="Choose the level of aggregation")
 
         # Step 3: Display the contents of each file as a dataframe with the custom name
         for df, custom_name in DFs_with_names:
