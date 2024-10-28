@@ -27,6 +27,16 @@ def get_hierarchy_colname(DF) -> str:
                     return colname
     return None
 
+def split_hierarchy_column(DF, colname_with_hierarchy):
+    """Eats a DF with the name of the column that contains the info about hierarchy.
+    Spits out the DF with the hierarchy column split into several other columns"""
+    
+    # add new columns -- that are from the split -- did not wanna use a for loop for performance issues
+    DF[colname_with_hierarchy.split(';')] = DF[colname_with_hierarchy].str.split(';', expand = True)
+    
+    # return both -- the split colname as a list and the DF with added columns
+    return colname_with_hierarchy.split(';'), DF
+
 def plot_data(list_of_DFs_and_custom_names):
     """Plot heatmaps for each passed DF."""
     names = [df_and_name[1] for df_and_name in list_of_DFs_and_custom_names]
@@ -93,7 +103,7 @@ def main():
 
         # group by selected level:
         with st.sidebar:
-            st.multiselect(label="Level", options=["laska", "smrt", "pravda", "lez"], placeholder="Choose the level of aggregation")
+           hierarchy_selection = st.multiselect(label="Level", options=get_hierarchy_colname(DFs_with_names[0][0]).split(';'), placeholder="Choose the level of aggregation")
 
         # Step 3: Display the contents of each file as a dataframe with the custom name
         for df, custom_name in DFs_with_names:
