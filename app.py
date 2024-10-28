@@ -38,7 +38,7 @@ def split_hierarchy_column(DF, colname_with_hierarchy):
     return colname_with_hierarchy.split(';'), DF
 
 
-def plot_data(list_of_DFs_and_custom_names, hierarchy_selection):
+def plot_data(list_of_DFs_and_custom_names, hierarchy_selection, number_of_records):
     """Plot heatmaps for each passed DF."""
     names = [df_and_name[1] for df_and_name in list_of_DFs_and_custom_names]
     first_df, first_name = list_of_DFs_and_custom_names[0]
@@ -54,7 +54,7 @@ def plot_data(list_of_DFs_and_custom_names, hierarchy_selection):
             df = split_hierarchy_column(df, get_hierarchy_colname(df))[1].groupby(by = hierarchy_selection).sum()
             
             # left join to the first df:
-            first_df_grouped = first_df_grouped.merge(df, on = hierarchy_selection, how = 'left')
+            first_df_grouped = first_df_grouped.merge(df, on = hierarchy_selection, how = 'outer')
             
     # # FINAL touches:        
     # # ------------------------- #
@@ -62,8 +62,8 @@ def plot_data(list_of_DFs_and_custom_names, hierarchy_selection):
     # sort values by the first sample:
     merged_df.sort_values(by=first_name, ascending = False, inplace=True)
 
-    # show the top 25
-    final_df = merged_df[names][:25]
+    # show the top records only
+    final_df = merged_df[names][:number_of_records]
     st.dataframe(final_df)
 
     plt.figure(figsize=(6,15))
@@ -96,6 +96,7 @@ def main():
         # select a hierarchy level:
         with st.sidebar:
            hierarchy_selection = st.multiselect("Level", get_hierarchy_colname(DFs_with_names[0][0]).split(';'), " species", placeholder="Choose the level of aggregation")
+           number_of_records = st.slider("How many top records from each file", 1, 100, 25)
 
         # Step 3: Display the contents of each file as a dataframe with the custom name
         for df, custom_name in DFs_with_names:
@@ -107,7 +108,7 @@ def main():
         # Step 4: Plot the contents of the files
         if st.button("Plot heatmap"):
             st.write("Graphs plotted!")
-            plot_data(DFs_with_names, hierarchy_selection)
+            plot_data(DFs_with_names, hierarchy_selection, number_of_records)
             
     else:
         st.write("Please upload one or more .tsv files.")

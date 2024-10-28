@@ -1,7 +1,8 @@
 # TO DO list
 
-[ ] set default value into the hierarchy multiselect box
-[ ] add slider for the amount of rows
+[x] set default value into the hierarchy multiselect box
+[x] add slider for the amount of rows
+[ ] revert the order of operations first cut, then try to merge
+[ ] add a select input for the color scheme
 [ ] add a singleselect input to choose what kind of merge to do
 	(left, inner, full)
-[ ] add a select input for the color scheme
