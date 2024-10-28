@@ -93,12 +93,6 @@ def main():
             # Append the file's dataframe and its custom name to the list
             DFs_with_names.append((load_file_into_DF(uploaded_file), custom_name))
 
-        # debug:
-        with st.sidebar:
-            st.write("## Debug bar:")
-            st.write("debugging:")
-            st.write(uploaded_files)
-
         # group by selected level:
         with st.sidebar:
            hierarchy_selection = st.multiselect(label="Level", options=get_hierarchy_colname(DFs_with_names[0][0]).split(';'), placeholder="Choose the level of aggregation")
