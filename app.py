@@ -37,26 +37,24 @@ def split_hierarchy_column(DF, colname_with_hierarchy):
     # return both -- the split colname as a list and the DF with added columns
     return colname_with_hierarchy.split(';'), DF
 
-def plot_data(list_of_DFs_and_custom_names):
+
+def plot_data(list_of_DFs_and_custom_names, hierarchy_selection):
     """Plot heatmaps for each passed DF."""
     names = [df_and_name[1] for df_and_name in list_of_DFs_and_custom_names]
     first_df, first_name = list_of_DFs_and_custom_names[0]
 
-    first_df_grouped = first_df.groupby(by = "kingdom; phylum; class; order; family; genus; species").sum()
+    first_df_grouped = split_hierarchy_column(first_df, get_hierarchy_colname(first_df))[1].groupby(by = hierarchy_selection).sum()
 
     for index, name_and_DF in enumerate(list_of_DFs_and_custom_names):
-        # st.write(index)
-        # st.write(name_and_DF)
-        df, name = name_and_DF
+        df, _ = name_and_DF
         if index == 0:
             pass
         else:
             # group:
-            df = df.groupby(by = "kingdom; phylum; class; order; family; genus; species").sum()
+            df = split_hierarchy_column(df, get_hierarchy_colname(df))[1].groupby(by = hierarchy_selection).sum()
             
             # left join to the first df:
-            first_df_grouped = first_df_grouped.merge(df, on="kingdom; phylum; class; order; family; genus; species", how = 'left')
-    #st.write(first_df_grouped[names])
+            first_df_grouped = first_df_grouped.merge(df, on = hierarchy_selection, how = 'left')
             
     # # FINAL touches:        
     # # ------------------------- #
@@ -115,7 +113,7 @@ def main():
         # Step 4: Plot the contents of the files
         if st.button("Plot heatmap"):
             st.write("Graphs plotted!")
-            plot_data(DFs_with_names)
+            plot_data(DFs_with_names, hierarchy_selection)
             
     else:
         st.write("Please upload one or more .tsv files.")
