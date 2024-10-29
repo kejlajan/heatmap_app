@@ -103,7 +103,7 @@ def plot_data(list_of_DFs_and_custom_names, hierarchy_selection, number_of_recor
         st.dataframe(final_df)
 
 def main():
-
+    st.set_page_config(layout="wide", page_title="tsv2png")
     st.title("TSV Files Viewer")
 
     # Step 1: File selection
@@ -116,17 +116,18 @@ def main():
             accept_multiple_files=True)
     
     if uploaded_files:
-        # Step 2: Create a list to store df and custom name associations
-        DFs_with_names = []
+        with col_filenames:
+            # Step 2: Create a list to store df and custom name associations
+            DFs_with_names = []
 
-        # Display a row for each file with an input field for the name
-        st.write("### Choose custom column names:")
-        for uploaded_file in uploaded_files:
-            file_name = uploaded_file.name
-            # Display input field with default value as the filename
-            custom_name = st.text_input(f"Enter a name for the data in `{file_name}`:", value=file_name.split(".")[0], key=file_name)
-            # Append the file's dataframe and its custom name to the list
-            DFs_with_names.append((load_file_into_DF(uploaded_file), custom_name))
+            # Display a row for each file with an input field for the name
+            st.write("### Choose custom column names:")
+            for uploaded_file in uploaded_files[::-1]:
+                file_name = uploaded_file.name
+                # Display input field with default value as the filename
+                custom_name = st.text_input(f"Enter a name for the data in `{file_name}`:", value=file_name.split(".")[0], key=file_name)
+                # Append the file's dataframe and its custom name to the list
+                DFs_with_names.append((load_file_into_DF(uploaded_file), custom_name))
 
         st.write("---")
 
