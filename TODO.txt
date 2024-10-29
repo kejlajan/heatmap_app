@@ -3,6 +3,7 @@
 [x] set default value into the hierarchy multiselect box
 [x] add slider for the amount of rows
 [ ] revert the order of operations first cut, then try to merge
+	[ ] order and cut, then merge
 [ ] add a select input for the color scheme
 [ ] add a singleselect input to choose what kind of merge to do
 	(left, inner, full)
