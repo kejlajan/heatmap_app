@@ -63,7 +63,7 @@ def split_hierarchy_column(DF, colname_with_hierarchy):
     return colname_with_hierarchy.split(';'), DF
 
 
-def plot_data(list_of_DFs_and_custom_names, hierarchy_selection, number_of_records, cmap_color):
+def plot_data(list_of_DFs_and_custom_names, hierarchy_selection, number_of_records, cmap_color, selected_join_kind):
     """Plot heatmaps for each passed DF."""
     names = [df_and_name[1] for df_and_name in list_of_DFs_and_custom_names]
     first_df, first_name = list_of_DFs_and_custom_names[0]
@@ -87,7 +87,7 @@ def plot_data(list_of_DFs_and_custom_names, hierarchy_selection, number_of_recor
             df = df[:number_of_records]
 
             # full join to the first df:
-            first_df_sorted = first_df_sorted.merge(df, on = hierarchy_selection, how = 'outer')
+            first_df_sorted = first_df_sorted.merge(df, on = hierarchy_selection, how = selected_join_kind)
             
     # get only the colnames that matter
     final_df = first_df_sorted.sort_values(by = first_name, ascending = False)[names]
@@ -133,9 +133,10 @@ def main():
 
         # select a hierarchy level:
         with st.sidebar:
-           hierarchy_selection = st.multiselect("Level", get_hierarchy_colname(DFs_with_names[0][0]).split(';'), " species", placeholder="Choose the level of aggregation")
-           number_of_records = st.slider("How many top records from each file", 1, 100, 25)
-           selected_cmap = st.selectbox("Color scheme", cmap_keywords)
+            hierarchy_selection = st.multiselect("Level", get_hierarchy_colname(DFs_with_names[0][0]).split(';'), " species", placeholder="Choose the level of aggregation")
+            number_of_records = st.slider("How many top records from each file", 1, 100, 25)
+            selected_cmap = st.selectbox("Color scheme", cmap_keywords)
+            selected_join_kind = st.selectbox("how do you want your files joined", ["outer", "inner", "left"])
 
         # Step 3: Display the contents of each file as a dataframe with the custom name
         for df, custom_name in DFs_with_names:
@@ -152,7 +153,7 @@ def main():
                 
         if plot_heatmap:        
             st.write("Heatmap plotted!")
-            plot_data(DFs_with_names, hierarchy_selection, number_of_records, selected_cmap)
+            plot_data(DFs_with_names, hierarchy_selection, number_of_records, selected_cmap, selected_join_kind)
             
     else:
         st.write("Please upload one or more .tsv files.")

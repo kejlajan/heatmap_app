@@ -5,5 +5,5 @@
 [x] revert the order of operations first cut, then try to merge
 	[x] order and cut, then merge
 [x] add a select input for the color scheme
-[ ] add a singleselect input to choose what kind of merge to do
+[x] add a singleselect input to choose what kind of merge to do
 	(left, inner, full)
